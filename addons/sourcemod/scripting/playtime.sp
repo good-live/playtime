@@ -130,7 +130,7 @@ public Action Event_SwitchTeam(Event event, const char[] name, bool dontBroadcas
 {
 	LogDebug("A player switched the team");
 	if(event.GetInt("numPlayers") >= g_cNeeded_Players.IntValue && !g_bIsActive){
-		CPrintToChatAll("%t", "Enough_Players");
+		CPrintToChatAll("%t %t", "Tag", "Enough_Players");
 		
 		g_bIsActive = true;
 		
@@ -143,7 +143,7 @@ public Action Event_SwitchTeam(Event event, const char[] name, bool dontBroadcas
 	}
 	
 	if(event.GetInt("numPlayers") < g_cNeeded_Players.IntValue && g_bIsActive){
-		CPrintToChatAll("%t", "Not_Enough_Players");
+		CPrintToChatAll("%t %t", "Tag, "Not_Enough_Players");
 		
 		g_bIsActive = false;
 		

@@ -50,7 +50,7 @@ public Action Command_VipAdd(int p_iClient, p_iArgs){
 	GetClientName(p_iTarget, p_sName2, sizeof(p_sName2));
 	
 	PT_AddPlayTime(p_iTarget, p_iTime);
-	CPrintToChat(p_iClient, "%t", "Time_Added", p_iTime, p_sName2);
+	CPrintToChat(p_iClient, "%t %t", "Tag", "Time_Added", p_iTime, p_sName2);
 	return Plugin_Handled;
 }
 
@@ -62,7 +62,7 @@ public Action Command_Vip(int p_iClient, p_iArgs){
 	int p_iTarget;
 	if(p_iArgs == 1){
 		if (!CheckCommandAccess(p_iClient, "pt_vip_other", ADMFLAG_GENERIC)){
-			CPrintToChat(p_iClient, "%t", "Not_Allowed");
+			CPrintToChat(p_iClient, "%t %t", "Tag", "Not_Allowed");
 			return Plugin_Handled;
 		}
 		char p_sName[256];
@@ -75,7 +75,7 @@ public Action Command_Vip(int p_iClient, p_iArgs){
 	}
 	char p_sName[21];
 	GetClientName(p_iTarget, p_sName, sizeof(p_sName));
-	CPrintToChatAll("%t", "VIP_Command", p_sName, PT_GetPlayTime(p_iTarget)/60);
+	CPrintToChatAll("%t %t", "Tag", "VIP_Command", p_sName, PT_GetPlayTime(p_iTarget)/60);
 	return Plugin_Handled;
 }
 
@@ -89,7 +89,7 @@ public Action Command_Session(int p_iClient, p_iArgs){
 	
 	if(p_iArgs == 1){
 		if (!CheckCommandAccess(p_iClient, "pt_session_other", ADMFLAG_GENERIC)){
-			CPrintToChat(p_iClient, "%t", "Not_Allowed");
+			CPrintToChat(p_iClient, "%t %t", "Tag" "Not_Allowed");
 			return Plugin_Handled;
 		}
 		char p_sName[256];
@@ -109,6 +109,6 @@ public Action Command_Session(int p_iClient, p_iArgs){
 	
 	int p_iTime = PT_GetSession(p_iTarget) / 360;
 	
-	CPrintToChatAll("%t", "Session", p_sName, p_iTime, p_sDate);
+	CPrintToChatAll("%t %t", "Tag" "Session", p_sName, p_iTime, p_sDate);
 	return Plugin_Handled;
 }
