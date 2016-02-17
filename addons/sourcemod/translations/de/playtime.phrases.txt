@@ -1,0 +1,33 @@
+"Phrases"
+{
+	"Time_Added"
+	{
+		"#format"	"{1:i},{2:s}"
+		"de"		"{green}[PLG-VIP]{default} {darkred}{default} {green}{2}{default} {darkred}wurden {default} {green}{1}{default} {darkred}Sekunden zu seiner Spielzeit hinzugefügt.{default}"
+	}
+	"Session"
+	{
+		"#format"	"{1:s},{2:i},{3:s}"
+		"de"		"{green}[PLG-VIP]{default} {green}{1}{darkred} hat bereits {green}{2}{3}{default} {darkred}Stunden am Stück gespielt.{default}"
+	}
+	"VIP_Command"
+	{
+		"#format"	"{1:s},{2:i}"
+		"de"		"{green}[PLG-VIP]{default} {darkred}{1}{default} {green}hat{default} {darkred}{2}{default} {green}Minuten auf{default} {darkred}Painlessgaming.eu{default} {green}Servern gespielt.{default}"
+	}
+	"Not_Allowed"
+	{
+		"#format"	""
+		"de"		"{green}[PLG-VIP]{default} {darkred}Nur Admins dürfen die Zeit von wem anderem prüfen :P{default}"
+	}
+	"Enough_Players"
+	{
+		"#format"	""
+		"de"		"{green}[PLG-VIP]{default} {darkred}Es sind genügend Spieler online. Playtime ist aktiv :){default}"
+	}
+	"Not_Enough_Players"
+	{
+		"#format"	""
+		"de"		"{green}[PLG-VIP]{default} {darkred}Es sind nicht genügend Spieler online. Playtime wird deaktiviert :/{default}"
+	}
+}

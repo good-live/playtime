@@ -1,0 +1,33 @@
+"Phrases"
+{
+	"Time_Added"
+	{
+		"#format"	"{1:i},{2:s}"
+		"en"		"{green}[PLG-VIP]{default} {darkred}Added{default} {green}{1}{default} {darkred}secounds to{default} {green}{2}'s{default} {darkred}playtime.{default}"
+	}
+	"Session"
+	{
+		"#format"	"{1:s},{2:i},{3:s}"
+		"en"		"{green}[PLG-VIP]{default} {darkred}{1}{default} played {green}{2}{3}{default} {darkred}hours in a row.{default}"
+	}
+	"VIP_Command"
+	{
+		"#format"	"{1:s},{2:i}"
+		"en"		"{green}[PLG-VIP]{default} {darkred}{1}{default} {green}played{default} {darkred}{2}{default} {green}minutes on{default} {darkred}Painlessgaming.eu{default} {green}servers.{default}"
+	}
+	"Not_Allowed"
+	{
+		"#format"	""
+		"en"		"{green}[PLG-VIP]{default} {darkred}Only admins can check the playtime of another player{default}"
+	}
+	"Enough_Players"
+	{
+		"#format"	""
+		"en"		"{green}[PLG-VIP]{default} {darkred}We got enough Players. Starting to track the playtime.{default}"
+	}
+	"Not_Enough_Players"
+	{
+		"#format"	""
+		"en"		"{green}[PLG-VIP]{default} {darkred}There aren't enough players. Stopping to track the playtime.{default}"
+	}
+}
