@@ -3,7 +3,7 @@
 #define DEBUG
 
 #define PLUGIN_AUTHOR "good_live"
-#define PLUGIN_VERSION "0.00"
+#define PLUGIN_VERSION "1.01"
 
 #include <sourcemod>
 #include <sdktools>
@@ -89,7 +89,7 @@ public Action Command_Session(int p_iClient, p_iArgs){
 	
 	if(p_iArgs == 1){
 		if (!CheckCommandAccess(p_iClient, "pt_session_other", ADMFLAG_GENERIC)){
-			CPrintToChat(p_iClient, "%t %t", "Tag" "Not_Allowed");
+			CPrintToChat(p_iClient, "%t %t", "Tag", "Not_Allowed");
 			return Plugin_Handled;
 		}
 		char p_sName[256];
@@ -109,6 +109,6 @@ public Action Command_Session(int p_iClient, p_iArgs){
 	
 	int p_iTime = PT_GetSession(p_iTarget) / 360;
 	
-	CPrintToChatAll("%t %t", "Tag" "Session", p_sName, p_iTime, p_sDate);
+	CPrintToChatAll("%t %t", "Tag", "Session", p_sName, p_iTime, p_sDate);
 	return Plugin_Handled;
 }

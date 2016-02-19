@@ -3,7 +3,7 @@
 #define DEBUG
 
 #define PLUGIN_AUTHOR "good_live"
-#define PLUGIN_VERSION "1.00"
+#define PLUGIN_VERSION "1.01"
 
 #include <sourcemod>
 #include <sdktools>
@@ -143,7 +143,7 @@ public Action Event_SwitchTeam(Event event, const char[] name, bool dontBroadcas
 	}
 	
 	if(event.GetInt("numPlayers") < g_cNeeded_Players.IntValue && g_bIsActive){
-		CPrintToChatAll("%t %t", "Tag, "Not_Enough_Players");
+		CPrintToChatAll("%t %t", "Tag", "Not_Enough_Players");
 		
 		g_bIsActive = false;
 		
