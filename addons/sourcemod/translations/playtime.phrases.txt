@@ -1,10 +1,9 @@
 "Phrases"
 {
-
- "Tag"
- {
-   "en"  "{green}[PLG-VIP]{default}"
- }
+	"Tag"
+	{
+		"en"  "{green}[PLG-VIP]{default}"
+	}
 	"Time_Added"
 	{
 		"#format"	"{1:i},{2:s}"
