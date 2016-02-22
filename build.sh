@@ -1,7 +1,7 @@
 #Vars
 FOLDER_SCRIPTING=addons/sourcemod/scripting
 FOLDER_PLUGINS=addons/sourcemod/plugins
-GIT_DEPENDENCIES=https://gitlab.com/painlessgaming/sm-includes.git
+GIT_DEPENDENCIES=https://gitlab.com/good_live/sm-includes.git
 PLUGIN_TAG=pt
 
 #download
@@ -14,7 +14,7 @@ cd downloads
 wget wget -q "http://www.sourcemod.net/latest.php?version=$1&os=linux" -O sourcemod.tar.gz
 tar -xzf sourcemod.tar.gz
 
-git clone https://gitlab.com/painlessgaming/sm-includes.git -q
+git clone $GIT_DEPENDENCIES -q
 
 #copy files
 
