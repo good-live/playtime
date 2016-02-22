@@ -1,0 +1,12 @@
+stages:
+  - build
+
+test-build-1.7-job:
+  stage: build
+  script: 
+    - bash build.sh "1.7"
+
+test-build-1.8-job:
+  stage: build
+  script: 
+    - bash build.sh "1.8"
