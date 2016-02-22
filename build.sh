@@ -1,6 +1,8 @@
 #Vars
 FOLDER_SCRIPTING=addons/sourcemod/scripting
 FOLDER_PLUGINS=addons/sourcemod/plugins
+GIT_DEPENDENCIES=https://gitlab.com/painlessgaming/sm-includes.git
+PLUGIN_TAG=pt
 
 #download
 apt-get update -yqq
@@ -12,7 +14,7 @@ cd downloads
 wget wget -q "http://www.sourcemod.net/latest.php?version=$1&os=linux" -O sourcemod.tar.gz
 tar -xzf sourcemod.tar.gz
 
-git clone https://Yeradon:$USER_PASSWORD@gitlab.com/Yeradon/sm-dependencies.git -q
+git clone https://gitlab.com/painlessgaming/sm-includes.git -q
 
 #copy files
 
