@@ -25,7 +25,7 @@ cp $FOLDER_SCRIPTING/compile.sh ../$FOLDER_SCRIPTING
 
 ##includes
 cp -r $FOLDER_SCRIPTING/include/* ../$FOLDER_SCRIPTING/include
-cp -r sm_includes/* ../$FOLDER_SCRIPTING/include
+cp -r sm-includes/* ../$FOLDER_SCRIPTING/include
 
 cd ../
 
