@@ -39,9 +39,6 @@ rm -r downloads
 cd addons/sourcemod/scripting
 ./compile.sh
 
-#stop build if error occured
-if %errorlevel% neq 0 exit /b %errorlevel%
-
 cd ../../../
 
 #zip build
@@ -49,3 +46,6 @@ cp -rv $FOLDER_SCRIPTING/compiled/* $FOLDER_PLUGINS
 rm -r $FOLDER_SCRIPTING/compiled
 
 zip -9rq $FILE addons
+
+#upload
+lftp -c "open -u $FTP_USER,$FTP_PASS $FTP_HOST; put -O $PLUGIN_TAG/downloads/$CI_BUILD_REF_NAME/ $FILE",
