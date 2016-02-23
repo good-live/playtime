@@ -47,9 +47,6 @@ cp -rv $FOLDER_SCRIPTING/compiled/* $FOLDER_PLUGINS
 rm -r $FOLDER_SCRIPTING/compiled
 
 zip -9rq $FILE addons
-ls
 
 #upload
-lftp -c "open -u $FTP_USER,$FTP_PASS $FTP_HOST; put -O $PLUGIN_TAG/downloads/$CI_BUILD_REF_NAME/ $FILE"
-
-echo $PLUGIN_TAG/downloads/$CI_BUILD_REF_NAME/
+lftp -u $FTP_USER,$FTP_PASS -c "put -O $PLUGIN_TAG/downloads/$CI_BUILD_REF_NAME/ $FILE" $FTP_HOST
