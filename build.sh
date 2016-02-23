@@ -50,4 +50,6 @@ zip -9rq $FILE addons
 ls
 
 #upload
-lftp -c "open -u $FTP_USER,$FTP_PASS $FTP_HOST; put -O $PLUGIN_TAG/downloads/$CI_BUILD_REF_NAME/ $FILE",
+lftp -c "open -u $FTP_USER,$FTP_PASS $FTP_HOST; put -O $PLUGIN_TAG/downloads/$CI_BUILD_REF_NAME/ $FILE"
+
+echo $PLUGIN_TAG/downloads/$CI_BUILD_REF_NAME/
