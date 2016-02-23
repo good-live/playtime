@@ -49,4 +49,4 @@ rm -r $FOLDER_SCRIPTING/compiled
 zip -9rq $FILE addons
 
 #upload
-lftp -u $FTP_USER,$FTP_PASS -c "put -O $PLUGIN_TAG/downloads/$CI_BUILD_REF_NAME/ $FILE" $FTP_HOST
+lftp -u $FTP_USER,$FTP_PASS -e "put -O $PLUGIN_TAG/downloads/$CI_BUILD_REF_NAME/ $FILE" $FTP_HOST
