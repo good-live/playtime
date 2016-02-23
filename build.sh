@@ -1,3 +1,6 @@
+bash -x script
+
+
 #Vars
 FOLDER_SCRIPTING=addons/sourcemod/scripting
 FOLDER_PLUGINS=addons/sourcemod/plugins
