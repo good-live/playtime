@@ -4,6 +4,10 @@ FOLDER_PLUGINS=addons/sourcemod/plugins
 GIT_DEPENDENCIES=https://gitlab.com/good_live/sm-includes.git
 PLUGIN_TAG=pt
 
+COUNT="$(git rev-list --count HEAD)"
+HASH="$(git log --pretty=format:%h -n 1)"
+FILE=$PLUGIN_TAG-$CI_BUILD_REF_NAME-$1-$COUNT-$HASH.zip
+
 #download
 apt-get update -yqq
 apt-get install gcc-multilib -yqq
@@ -11,7 +15,7 @@ apt-get install gcc-multilib -yqq
 mkdir downloads
 cd downloads
 
-wget wget -q "http://www.sourcemod.net/latest.php?version=$1&os=linux" -O sourcemod.tar.gz
+wget -q "http://www.sourcemod.net/latest.php?version=$1&os=linux" -O sourcemod.tar.gz
 tar -xzf sourcemod.tar.gz
 
 git clone $GIT_DEPENDENCIES -q
@@ -34,3 +38,17 @@ rm -r downloads
 #compile
 cd addons/sourcemod/scripting
 ./compile.sh
+
+#stop build if error occured
+if %errorlevel% neq 0 exit /b %errorlevel%
+
+cd ../../../
+
+#zip build
+cp -rv $FOLDER_SCRIPTING/compiled/* $FOLDER_PLUGINS
+rm -r $FOLDER_SCRIPTING/compiled
+
+zip -9rq $FILE addons
+
+#upload
+lftp -c "open -u $FTP_USER,$FTP_PASS $FTP_HOST; put -O $PLUGIN_TAG/downloads/$2/ $FILE"
