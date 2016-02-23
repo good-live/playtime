@@ -1,6 +1,3 @@
-bash -x script
-
-
 #Vars
 FOLDER_SCRIPTING=addons/sourcemod/scripting
 FOLDER_PLUGINS=addons/sourcemod/plugins
@@ -52,6 +49,3 @@ cp -rv $FOLDER_SCRIPTING/compiled/* $FOLDER_PLUGINS
 rm -r $FOLDER_SCRIPTING/compiled
 
 zip -9rq $FILE addons
-
-#upload
-lftp -c "open -u $FTP_USER,$FTP_PASS $FTP_HOST; put -O $PLUGIN_TAG/downloads/$CI_BUILD_REF_NAME/ $FILE"
