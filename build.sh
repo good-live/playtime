@@ -43,7 +43,7 @@ cd ../../../
 
 #zip build
 mkdir $FOLDER_PLUGINS
-cp -rv $DER_SCRIPTING/compiled/* $FOLDER_PLUGINS
+cp -rv $FOLDER_SCRIPTING/compiled/* $FOLDER_PLUGINS
 rm -r $FOLDER_SCRIPTING/compiled
 
 zip -9rq $FILE addons
