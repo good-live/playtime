@@ -10,7 +10,7 @@ FILE=$PLUGIN_TAG-$CI_BUILD_REF_NAME-$1-$COUNT-$HASH.zip
 
 #download
 apt-get update -yqq
-apt-get install gcc-multilib zip -yqq
+apt-get install gcc-multilib zip lftp -yqq
 
 mkdir downloads
 cd downloads
