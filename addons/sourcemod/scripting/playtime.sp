@@ -95,10 +95,11 @@ public void OnClientPostAdminCheck(int p_iClient)
 	}
 	
 	g_ePlayerInfos[p_iClient][iPlaytime] = 0;
-	
-	char p_sQuery[256];
-	Format(p_sQuery, sizeof(p_sQuery), "SELECT `playtime` FROM `playtime` WHERE `steamid` = \"%s\"", p_sID);
-	g_hDatabase.Query(DBLoadPlaytime_Callback, p_sQuery, p_iUserID);
+	if(g_hDatabase != INVALID_HANDLE){
+		char p_sQuery[256];
+		Format(p_sQuery, sizeof(p_sQuery), "SELECT `playtime` FROM `playtime` WHERE `steamid` = \"%s\"", p_sID);
+		g_hDatabase.Query(DBLoadPlaytime_Callback, p_sQuery, p_iUserID);
+	}
 }
 
 public void DBLoadPlaytime_Callback(Database db, DBResultSet results, const char[] error, any userid)
