@@ -2,36 +2,36 @@
 {
 	"Tag"
 	{
-		"de"  "{green}[PLG-VIP]{default}"
+		"de"  "{green}[PLG-VIP] {default}"
 	}
 	"Time_Added"
 	{
 		"#format"	"{1:i},{2:s}"
-		"de"		"{green}[PLG-VIP]{default} {darkred}{default} {green}{2}{default} {darkred}wurden {default} {green}{1}{default} {darkred}Sekunden zu seiner Spielzeit hinzugefügt.{default}"
+		"de"		"{green}{2}{darkred}wurden {green}{1} {darkred}Sekunden zu seiner Spielzeit hinzugefügt."
 	}
 	"Session"
 	{
 		"#format"	"{1:s},{2:i},{3:s}"
-		"de"		"{green}[PLG-VIP]{default} {green}{1}{darkred} hat bereits {green}{2}{3}{default} {darkred}Stunden am Stück gespielt.{default}"
+		"de"		"{green}{1}{darkred} hat bereits {green}{2}{3}{default} {darkred}Stunden am Stück gespielt."
 	}
 	"VIP_Command"
 	{
 		"#format"	"{1:s},{2:i}"
-		"de"		"{green}[PLG-VIP]{default} {darkred}{1}{default} {green}hat{default} {darkred}{2}{default} {green}Minuten auf{default} {darkred}Painlessgaming.eu{default} {green}Servern gespielt.{default}"
+		"de"		"{darkred}{1}{default} {green}hat{default} {darkred}{2}{default} {green}Minuten auf{default} {darkred}Painlessgaming.eu{default} {green}Servern gespielt."
 	}
 	"Not_Allowed"
 	{
 		"#format"	""
-		"de"		"{green}[PLG-VIP]{default} {darkred}Nur Admins dürfen die Zeit von wem anderem prüfen :P{default}"
+		"de"		"{darkred}Nur Admins dürfen die Zeit von wem anderem prüfen :P"
 	}
 	"Enough_Players"
 	{
 		"#format"	""
-		"de"		"{green}[PLG-VIP]{default} {darkred}Es sind genügend Spieler online. Playtime ist aktiv :){default}"
+		"de"		"{darkred}Es sind genügend Spieler online. Playtime ist aktiv :)"
 	}
 	"Not_Enough_Players"
 	{
 		"#format"	""
-		"de"		"{green}[PLG-VIP]{default} {darkred}Es sind nicht genügend Spieler online. Playtime wird deaktiviert :/{default}"
+		"de"		"{darkred}Es sind nicht genügend Spieler online. Playtime wird deaktiviert :/"
 	}
 }
