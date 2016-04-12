@@ -177,11 +177,11 @@ public void AddPlaytime(int p_iClient, int p_iAmount){
 	g_hDatabase.Escape(p_sName, p_sNameE, sizeof(p_sNameE));
 	
 	char p_sID[21];
-	if(!GetClientAuthId(p_iClient, AuthId_Steam2, p_sID, sizeof(p_sName)))
+	if(!GetClientAuthId(p_iClient, AuthId_Steam2, p_sID, sizeof(p_sID)))
 		return;
 	
 	char p_sQuery[512];
-	Format(p_sQuery, sizeof(p_sQuery), "INSERT INTO playtime (steamid, playtime, name) VALUES (\"%s\", %i, \"%s\") ON DUPLICATE KEY UPDATE playtime=playtime+VALUES(playtime), name=VALUES(name)", p_sID, p_iAmount, p_sName);
+	Format(p_sQuery, sizeof(p_sQuery), "INSERT INTO playtime (steamid, playtime, name) VALUES (\"%s\", %i, \"%s\") ON DUPLICATE KEY UPDATE playtime=playtime+VALUES(playtime), name=VALUES(name)", p_sID, p_iAmount, p_sNameE);
 	g_hDatabase.Query(DBAddPlayTime_Callback, p_sQuery);
 	g_ePlayerInfos[p_iClient][iPlaytime] = g_ePlayerInfos[p_iClient][iPlaytime] + p_iAmount;
 	LogDebug("Stored Playtime for %s", p_sName);
