@@ -30,85 +30,85 @@ public void OnPluginStart()
 	LoadTranslations("common.phrases.txt");
 }
 
-public Action Command_VipAdd(int p_iClient, p_iArgs){
-	if(p_iArgs != 2){
-		ReplyToCommand(p_iClient, "[SM] Usage: sm_vipadd <#userid|name> <time>");
+public Action Command_VipAdd(int iClient, iArgs){
+	if(iArgs != 2){
+		ReplyToCommand(iClient, "[SM] Usage: sm_vipadd <#userid|name> <time>");
 		return Plugin_Handled;
 	}
 	
-	char p_sName[64];
-	GetCmdArg(1, p_sName, sizeof(p_sName));
+	char sName[64];
+	GetCmdArg(1, sName, sizeof(sName));
 	
-	int p_iTarget = FindTarget(p_iClient, p_sName, true);
+	int iTarget = FindTarget(iClient, sName, true);
 	
-	char p_sTime[64];
-	GetCmdArg(2, p_sTime, sizeof(p_sTime));
+	char sTime[64];
+	GetCmdArg(2, sTime, sizeof(sTime));
 	
-	int p_iTime = StringToInt(p_sTime);
+	int iTime = StringToInt(sTime);
 	
-	char p_sName2[64];
-	GetClientName(p_iTarget, p_sName2, sizeof(p_sName2));
+	char sName2[64];
+	GetClientName(iTarget, sName2, sizeof(sName2));
 	
-	PT_AddPlayTime(p_iTarget, p_iTime);
-	CPrintToChat(p_iClient, "%t %t", "Tag", "Time_Added", p_iTime, p_sName2);
+	PT_AddPlayTime(iTarget, iTime);
+	CPrintToChat(iClient, "%t %t", "Tag", "Time_Added", iTime, sName2);
 	return Plugin_Handled;
 }
 
-public Action Command_Vip(int p_iClient, p_iArgs){
-	if(p_iArgs > 1){
-		ReplyToCommand(p_iClient, "[SM] Usage: sm_vip [name|#userid]");
+public Action Command_Vip(int iClient, iArgs){
+	if(iArgs > 1){
+		ReplyToCommand(iClient, "[SM] Usage: sm_vip [name|#userid]");
 		return Plugin_Handled;
 	}
-	int p_iTarget;
-	if(p_iArgs == 1){
-		if (!CheckCommandAccess(p_iClient, "pt_vip_other", ADMFLAG_GENERIC)){
-			CPrintToChat(p_iClient, "%t %t", "Tag", "Not_Allowed");
+	int iTarget;
+	if(iArgs == 1){
+		if (!CheckCommandAccess(iClient, "pt_viother", ADMFLAG_GENERIC)){
+			CPrintToChat(iClient, "%t %t", "Tag", "Not_Allowed");
 			return Plugin_Handled;
 		}
-		char p_sName[256];
-		GetCmdArg(1, p_sName, sizeof(p_sName));
-		p_iTarget = FindTarget(p_iClient, p_sName, true);
+		char sName[256];
+		GetCmdArg(1, sName, sizeof(sName));
+		iTarget = FindTarget(iClient, sName, true);
 	}
 	
-	if(p_iArgs == 0){
-		p_iTarget = p_iClient;
+	if(iArgs == 0){
+		iTarget = iClient;
 	}
-	char p_sName[21];
-	GetClientName(p_iTarget, p_sName, sizeof(p_sName));
-	CPrintToChatAll("%t %t", "Tag", "VIP_Command", p_sName, PT_GetPlayTime(p_iTarget)/60);
+	char sName[21];
+	GetClientName(iTarget, sName, sizeof(sName));
+	CPrintToChatAll("%t %t", "Tag", "VICommand", sName, PT_GetPlayTime(iTarget)/60);
 	return Plugin_Handled;
 }
 
-public Action Command_Session(int p_iClient, p_iArgs){
-	if(p_iArgs > 1){
-		ReplyToCommand(p_iClient, "[SM] Usage: sm_session [name|#userid]");
+public Action Command_Session(int iClient, iArgs){
+	if(iArgs > 1){
+		ReplyToCommand(iClient, "[SM] Usage: sm_session [name|#userid]");
 		return Plugin_Handled;
 	}
 	
-	int p_iTarget;
+	int iTarget;
 	
-	if(p_iArgs == 1){
-		if (!CheckCommandAccess(p_iClient, "pt_session_other", ADMFLAG_GENERIC)){
-			CPrintToChat(p_iClient, "%t %t", "Tag", "Not_Allowed");
+	if(iArgs == 1){
+		if (!CheckCommandAccess(iClient, "pt_session_other", ADMFLAG_GENERIC)){
+			CPrintToChat(iClient, "%t %t", "Tag", "Not_Allowed");
 			return Plugin_Handled;
 		}
-		char p_sName[256];
-		GetCmdArg(1, p_sName, sizeof(p_sName));
-		p_iTarget = FindTarget(p_iClient, p_sName, true);
+		char sName[256];
+		GetCmdArg(1, sName, sizeof(sName));
+		iTarget = FindTarget(iClient, sName, true);
 	}
 	
-	if(p_iArgs == 0){
-		p_iTarget = p_iClient;
+	if(iArgs == 0){
+		iTarget = iClient;
 	}
 	
-	char p_sName[21];
-	GetClientName(p_iTarget, p_sName, sizeof(p_sName));
+	char sName[21];
+	GetClientName(iTarget, sName, sizeof(sName));
 	
-	char p_sDate[64];
-	FormatTime(p_sDate, sizeof(p_sDate), ":%M:%S", PT_GetSession(p_iTarget));
+	char sDate[64];
+	FormatTime(sDate, sizeof(sDate), ":%M:%S", PT_GetSession(iTarget));
 	
-	int p_iTime = PT_GetSession(p_iTarget) / 360;
+	int iTime = PT_GetSession(iTarget) / 360;
 	
-	CPrintToChatAll("%t %t", "Tag", "Session", p_sName, p_iTime, p_sDate);
+	CPrintToChatAll("%t %t", "Tag", "Session", sName, iTime, sDate);
 	return Plugin_Handled;
 }
