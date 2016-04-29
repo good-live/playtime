@@ -3,7 +3,7 @@
 #define DEBUG
 
 #define PLUGIN_AUTHOR "good_live"
-#define PLUGIN_VERSION "1.02"
+#define PLUGIN_VERSION "1.03"
 
 #include <sourcemod>
 #include <sdktools>
@@ -38,7 +38,7 @@ enum PlayerInfos
 	iPlaytime,
 	iConnecttime
 }
-g_ePlayerInfos[MAXPLAYERS + 1][PlayerInfos];
+int g_iPlayerInfos[MAXPLAYERS + 1][PlayerInfos];
 
 
 public void OnPluginStart()
@@ -70,7 +70,7 @@ public Action Event_PlayerTeam(Event event, const char[] name, bool dontBroadcas
 		int iClient = GetClientOfUserId(event.GetInt("userid"));
 		if(!IsClientValid(iClient))
 			return;
-		g_ePlayerInfos[iClient][iConnecttime] = GetTime();
+		g_iPlayerInfos[iClient][iConnecttime] = GetTime();
 		LogDebug("Saved Connecttime for client %i", iClient);
 	}
 	if(event.GetInt("team") <= 1 && event.GetInt("oldteam") >= 2 && g_bIsActive){
@@ -94,7 +94,7 @@ public void OnClientPostAdminCheck(int iClient)
 		return;
 	}
 	
-	g_ePlayerInfos[iClient][iPlaytime] = 0;
+	g_iPlayerInfos[iClient][iPlaytime] = 0;
 	if(g_hDatabase != INVALID_HANDLE){
 		char sQuery[256];
 		Format(sQuery, sizeof(sQuery), "SELECT `playtime` FROM `playtime` WHERE `steamid` = \"%s\"", sID);
@@ -118,12 +118,12 @@ public void DBLoadPlaytime_Callback(Database db, DBResultSet results, const char
 	int iClient = GetClientOfUserId(userid);
 	if(!IsClientValid(iClient))
 		return;
-	g_ePlayerInfos[iClient][iPlaytime] = iTime;
+	g_iPlayerInfos[iClient][iPlaytime] = iTime;
 	LogDebug("Stored playtime: %i for client: %i", iTime, iClient);
 }
 
 public void OnClientDisconnect(int iClient){
-	if(IsClientValid(iClient) && g_ePlayerInfos[iClient][iConnecttime] != 0)
+	if(IsClientValid(iClient) && g_iPlayerInfos[iClient][iConnecttime] != 0)
 		SavePlaytime(iClient);
 }
 
@@ -137,7 +137,7 @@ public Action Event_SwitchTeam(Event event, const char[] name, bool dontBroadcas
 		
 		for (int i; i <= MaxClients + 1; i++) {
 			if(IsClientValid(i) && GetClientTeam(i) >= 2){
-				g_ePlayerInfos[i][iConnecttime] = GetTime();
+				g_iPlayerInfos[i][iConnecttime] = GetTime();
 				LogDebug("Saved connecttime for %i", i);
 			}
 		}
@@ -149,7 +149,7 @@ public Action Event_SwitchTeam(Event event, const char[] name, bool dontBroadcas
 		g_bIsActive = false;
 		
 		for (int i; i <= MaxClients + 1; i++) {
-			if(IsClientValid(i) && g_ePlayerInfos[i][iConnecttime] != 0){
+			if(IsClientValid(i) && g_iPlayerInfos[i][iConnecttime] != 0){
 				SavePlaytime(i);
 			}
 		}
@@ -158,12 +158,12 @@ public Action Event_SwitchTeam(Event event, const char[] name, bool dontBroadcas
 
 
 public void SavePlaytime(int iClient){
-	if(!IsClientValid(iClient) || g_ePlayerInfos[iClient][iConnecttime] <= 0)
+	if(!IsClientValid(iClient) || g_iPlayerInfos[iClient][iConnecttime] <= 0)
 		return;
-	int iAmount = GetTime() - g_ePlayerInfos[iClient][iConnecttime];
+	int iAmount = GetTime() - g_iPlayerInfos[iClient][iConnecttime];
 	AddPlaytime(iClient, iAmount);
 	
-	g_ePlayerInfos[iClient][iConnecttime] = 0;
+	g_iPlayerInfos[iClient][iConnecttime] = 0;
 }
 
 public void AddPlaytime(int iClient, int iAmount){
@@ -183,7 +183,7 @@ public void AddPlaytime(int iClient, int iAmount){
 	char sQuery[512];
 	Format(sQuery, sizeof(sQuery), "INSERT INTO playtime (steamid, playtime, name) VALUES (\"%s\", %i, \"%s\") ON DUPLICATE KEY UPDATE playtime=playtime+VALUES(playtime), name=VALUES(name)", sID, iAmount, sNameE);
 	g_hDatabase.Query(DBAddPlayTime_Callback, sQuery);
-	g_ePlayerInfos[iClient][iPlaytime] = g_ePlayerInfos[iClient][iPlaytime] + iAmount;
+	g_iPlayerInfos[iClient][iPlaytime] = g_iPlayerInfos[iClient][iPlaytime] + iAmount;
 	LogDebug("Stored Playtime for %s", sName);
 }
 
@@ -267,7 +267,7 @@ public int Native_GetPlayTime(Handle plugin, int numParams)
 	if(!IsClientValid(iClient))
 		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%i)", iClient);
 	
-	int iTime = g_ePlayerInfos[iClient][iPlaytime];
+	int iTime = g_iPlayerInfos[iClient][iPlaytime];
 
 	return iTime;
 }
@@ -278,7 +278,7 @@ public int Native_GetSessionTime(Handle plugin, int numParams)
 	if(!IsClientValid(iClient))
 		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%i)", iClient);
 	
-	int iTime = g_ePlayerInfos[iClient][iConnecttime];
+	int iTime = g_iPlayerInfos[iClient][iConnecttime];
 		
 	int iSession;
 	if(iTime == 0)
