@@ -3,7 +3,7 @@
 #define DEBUG
 
 #define PLUGIN_AUTHOR "good_live"
-#define PLUGIN_VERSION "1.01"
+#define PLUGIN_VERSION "1.02"
 
 #include <sourcemod>
 #include <sdktools>
@@ -67,38 +67,38 @@ public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max
 public Action Event_PlayerTeam(Event event, const char[] name, bool dontBroadcast)
 {
 	if(event.GetInt("oldteam") <= 1 && event.GetInt("team") >= 2 && g_bIsActive){
-		int p_iClient = GetClientOfUserId(event.GetInt("userid"));
-		if(!IsClientValid(p_iClient))
+		int iClient = GetClientOfUserId(event.GetInt("userid"));
+		if(!IsClientValid(iClient))
 			return;
-		g_ePlayerInfos[p_iClient][iConnecttime] = GetTime();
-		LogDebug("Saved Connecttime for client %i", p_iClient);
+		g_ePlayerInfos[iClient][iConnecttime] = GetTime();
+		LogDebug("Saved Connecttime for client %i", iClient);
 	}
 	if(event.GetInt("team") <= 1 && event.GetInt("oldteam") >= 2 && g_bIsActive){
-		int p_iClient = GetClientOfUserId(event.GetInt("userid"));
-		if(!IsClientValid(p_iClient))
+		int iClient = GetClientOfUserId(event.GetInt("userid"));
+		if(!IsClientValid(iClient))
 			return;
-		SavePlaytime(p_iClient);
+		SavePlaytime(iClient);
 	}
 }
 
-public void OnClientPostAdminCheck(int p_iClient)
+public void OnClientPostAdminCheck(int iClient)
 {
-	if(!IsClientValid(p_iClient))
+	if(!IsClientValid(iClient))
 		return;
 	
-	int p_iUserID = GetClientUserId(p_iClient);
+	int iUserID = GetClientUserId(iClient);
 	
-	char p_sID[21];
-	if(!GetClientAuthId(p_iClient, AuthId_Steam2, p_sID, sizeof(p_sID))){
+	char sID[21];
+	if(!GetClientAuthId(iClient, AuthId_Steam2, sID, sizeof(sID))){
 		LogDebug("Error retriving SteamID from a joining client");
 		return;
 	}
 	
-	g_ePlayerInfos[p_iClient][iPlaytime] = 0;
+	g_ePlayerInfos[iClient][iPlaytime] = 0;
 	if(g_hDatabase != INVALID_HANDLE){
-		char p_sQuery[256];
-		Format(p_sQuery, sizeof(p_sQuery), "SELECT `playtime` FROM `playtime` WHERE `steamid` = \"%s\"", p_sID);
-		g_hDatabase.Query(DBLoadPlaytime_Callback, p_sQuery, p_iUserID);
+		char sQuery[256];
+		Format(sQuery, sizeof(sQuery), "SELECT `playtime` FROM `playtime` WHERE `steamid` = \"%s\"", sID);
+		g_hDatabase.Query(DBLoadPlaytime_Callback, sQuery, iUserID);
 	}
 }
 
@@ -114,17 +114,17 @@ public void DBLoadPlaytime_Callback(Database db, DBResultSet results, const char
 	if(!results.RowCount)
 		return;
 	
-	int p_iTime = results.FetchInt(0);
-	int p_iClient = GetClientOfUserId(userid);
-	if(!IsClientValid(p_iClient))
+	int iTime = results.FetchInt(0);
+	int iClient = GetClientOfUserId(userid);
+	if(!IsClientValid(iClient))
 		return;
-	g_ePlayerInfos[p_iClient][iPlaytime] = p_iTime;
-	LogDebug("Stored playtime: %i for client: %i", p_iTime, p_iClient);
+	g_ePlayerInfos[iClient][iPlaytime] = iTime;
+	LogDebug("Stored playtime: %i for client: %i", iTime, iClient);
 }
 
-public void OnClientDisconnect(int p_iClient){
-	if(IsClientValid(p_iClient) && g_ePlayerInfos[p_iClient][iConnecttime] != 0)
-		SavePlaytime(p_iClient);
+public void OnClientDisconnect(int iClient){
+	if(IsClientValid(iClient) && g_ePlayerInfos[iClient][iConnecttime] != 0)
+		SavePlaytime(iClient);
 }
 
 public Action Event_SwitchTeam(Event event, const char[] name, bool dontBroadcast)
@@ -157,40 +157,40 @@ public Action Event_SwitchTeam(Event event, const char[] name, bool dontBroadcas
 }
 
 
-public void SavePlaytime(int p_iClient){
-	if(!IsClientValid(p_iClient) || g_ePlayerInfos[p_iClient][iConnecttime] <= 0)
+public void SavePlaytime(int iClient){
+	if(!IsClientValid(iClient) || g_ePlayerInfos[iClient][iConnecttime] <= 0)
 		return;
-	int p_iAmount = GetTime() - g_ePlayerInfos[p_iClient][iConnecttime];
-	AddPlaytime(p_iClient, p_iAmount);
+	int iAmount = GetTime() - g_ePlayerInfos[iClient][iConnecttime];
+	AddPlaytime(iClient, iAmount);
 	
-	g_ePlayerInfos[p_iClient][iConnecttime] = 0;
+	g_ePlayerInfos[iClient][iConnecttime] = 0;
 }
 
-public void AddPlaytime(int p_iClient, int p_iAmount){
-	if(!IsClientValid(p_iClient))
+public void AddPlaytime(int iClient, int iAmount){
+	if(!IsClientValid(iClient))
 		return;
 	
-	char p_sName[64];
-	char p_sNameE[sizeof(p_sName) * 2 + 1];
-	if(!GetClientName(p_iClient, p_sName, sizeof(p_sName)))
+	char sName[64];
+	char sNameE[sizeof(sName) * 2 + 1];
+	if(!GetClientName(iClient, sName, sizeof(sName)))
 		return;
-	g_hDatabase.Escape(p_sName, p_sNameE, sizeof(p_sNameE));
+	g_hDatabase.Escape(sName, sNameE, sizeof(sNameE));
 	
-	char p_sID[21];
-	if(!GetClientAuthId(p_iClient, AuthId_Steam2, p_sID, sizeof(p_sID)))
+	char sID[21];
+	if(!GetClientAuthId(iClient, AuthId_Steam2, sID, sizeof(sID)))
 		return;
 	
-	char p_sQuery[512];
-	Format(p_sQuery, sizeof(p_sQuery), "INSERT INTO playtime (steamid, playtime, name) VALUES (\"%s\", %i, \"%s\") ON DUPLICATE KEY UPDATE playtime=playtime+VALUES(playtime), name=VALUES(name)", p_sID, p_iAmount, p_sNameE);
-	g_hDatabase.Query(DBAddPlayTime_Callback, p_sQuery);
-	g_ePlayerInfos[p_iClient][iPlaytime] = g_ePlayerInfos[p_iClient][iPlaytime] + p_iAmount;
-	LogDebug("Stored Playtime for %s", p_sName);
+	char sQuery[512];
+	Format(sQuery, sizeof(sQuery), "INSERT INTO playtime (steamid, playtime, name) VALUES (\"%s\", %i, \"%s\") ON DUPLICATE KEY UPDATE playtime=playtime+VALUES(playtime), name=VALUES(name)", sID, iAmount, sNameE);
+	g_hDatabase.Query(DBAddPlayTime_Callback, sQuery);
+	g_ePlayerInfos[iClient][iPlaytime] = g_ePlayerInfos[iClient][iPlaytime] + iAmount;
+	LogDebug("Stored Playtime for %s", sName);
 }
 
 
-public bool IsClientValid(int p_iClient)
+public bool IsClientValid(int iClient)
 {
-	if(p_iClient > 0 && p_iClient <= MaxClients && IsClientInGame(p_iClient))
+	if(iClient > 0 && iClient <= MaxClients && IsClientInGame(iClient))
 	{
 		return true;
 	}
@@ -224,12 +224,12 @@ public void DBConnect_Callback(Database db, const char[] error, any data)
 	
 	LogDebug("Trying to Create Tables");
 	
-	char p_sQuery[512];
-	Format(p_sQuery, sizeof(p_sQuery), "SET NAMES \"UTF8\"");
-	g_hDatabase.Query(DBSetUtf8_Callback, p_sQuery );
+	char sQuery[512];
+	Format(sQuery, sizeof(sQuery), "SET NAMES \"UTF8\"");
+	g_hDatabase.Query(DBSetUtf8_Callback, sQuery );
 	
-	Format(p_sQuery, sizeof(p_sQuery), "CREATE TABLE IF NOT EXISTS `playtime` (`id` int(11) NOT NULL AUTO_INCREMENT, `steamid` varchar(21) NOT NULL, `playtime` int(11) NOT NULL, `name` varchar(64) CHARACTER SET utf8mb4 NOT NULL, UNIQUE (`steamid`), PRIMARY KEY (`id`))");
-	g_hDatabase.Query(DBCreateTable_Callback, p_sQuery);
+	Format(sQuery, sizeof(sQuery), "CREATE TABLE IF NOT EXISTS `playtime` (`id` int(11) NOT NULL AUTO_INCREMENT, `steamid` varchar(21) NOT NULL, `playtime` int(11) NOT NULL, `name` varchar(64) CHARACTER SET utf8mb4 NOT NULL, UNIQUE (`steamid`), PRIMARY KEY (`id`))");
+	g_hDatabase.Query(DBCreateTable_Callback, sQuery);
 }
 
 public void DBSetUtf8_Callback(Database db, DBResultSet results, const char[] error, any data)
@@ -262,31 +262,31 @@ public void DBAddPlayTime_Callback(Database db, DBResultSet results, const char[
 
 public int Native_GetPlayTime(Handle plugin, int numParams)
 {
-	int p_iClient = GetNativeCell(1);
+	int iClient = GetNativeCell(1);
 	
-	if(!IsClientValid(p_iClient))
-		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%i)", p_iClient);
+	if(!IsClientValid(iClient))
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%i)", iClient);
 	
-	int p_iTime = g_ePlayerInfos[p_iClient][iPlaytime];
+	int iTime = g_ePlayerInfos[iClient][iPlaytime];
 
-	return p_iTime;
+	return iTime;
 }
 
 public int Native_GetSessionTime(Handle plugin, int numParams)
 {
-	int p_iClient = GetNativeCell(1);
-	if(!IsClientValid(p_iClient))
-		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%i)", p_iClient);
+	int iClient = GetNativeCell(1);
+	if(!IsClientValid(iClient))
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%i)", iClient);
 	
-	int p_iTime = g_ePlayerInfos[p_iClient][iConnecttime];
+	int iTime = g_ePlayerInfos[iClient][iConnecttime];
 		
-	int p_iSession;
-	if(p_iTime == 0)
-		p_iSession = 0;
-	if(p_iTime != 0)
-		p_iSession = GetTime() - p_iTime;
+	int iSession;
+	if(iTime == 0)
+		iSession = 0;
+	if(iTime != 0)
+		iSession = GetTime() - iTime;
 
-	return p_iSession;
+	return iSession;
 }
 
 public int Native_AddPlayTime(Handle plugin, int numParams)
@@ -294,10 +294,10 @@ public int Native_AddPlayTime(Handle plugin, int numParams)
 	if(numParams != 2)
 		return ThrowNativeError(SP_ERROR_NATIVE, "You have to pass 2 Arguments, but you passed %i", numParams);
 	
-	int p_iClient = GetNativeCell(1);
-	int p_iAmount = GetNativeCell(2);
+	int iClient = GetNativeCell(1);
+	int iAmount = GetNativeCell(2);
 	
-	AddPlaytime(p_iClient, p_iAmount);
+	AddPlaytime(iClient, iAmount);
 
 	return true;
 }
