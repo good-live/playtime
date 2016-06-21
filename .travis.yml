@@ -1,0 +1,35 @@
+# Use the new container-based infrastructure
+sudo: false
+
+# Install some apt packages needed for spcomp
+addons:
+    apt_packages:
+        - lib32stdc++6
+
+# Set the build environment
+env:
+    global:
+        - FILE=playtime-$TRAVIS_BUILD_NUMBER
+		- FOLDER=playtime
+    matrix:
+        - SMVERSION=1.7 # Legacy
+        - SMVERSION=1.8 # Stable
+        - SMVERSION=1.9 # Unstable
+    
+# And compile!
+install:
+    - wget --input-file=http://sourcemod.net/smdrop/$SMVERSION/sourcemod-latest-linux
+    - tar -xzf $(cat sourcemod-latest-linux)
+before_script:
+    - chmod +x addons/sourcemod/scripting/spcomp
+    - sed -i "s/<BUILD_ID>/$TRAVIS_BUILD_NUMBER/g" addons/sourcemod/scripting/include/playtime.inc
+script: ./addons/sourcemod/scripting/compile.sh playtime.sp playtime_commands.sp
+
+# Releases
+after_script:
+    - mkdir $FILE $FILE/addons $FILE/addons/sourcemod $FILE/addons/sourcemod/translations $FILE/addons/sourcemod/plugins
+    - mv addons/sourcemod/scripting/compiled/*.smx $FILE/addons/sourcemod/plugins/
+    - wget -O translations.zip http://translator.mitchdempsey.com/sourcemod_plugins/199/download/playtime.translations.zip
+    - unzip translations.zip -d $FILE/
+    - zip -r $FILE.zip $FILE/
+    - curl --user $FTP_USER:$FTP_PASS -T $FILE.zip ftp://$FTP_HOST/$FOLDER/$SMVERSION/
