@@ -61,7 +61,7 @@ public Action Command_Vip(int iClient, iArgs){
 	}
 	int iTarget;
 	if(iArgs == 1){
-		if (!CheckCommandAccess(iClient, "pt_viother", ADMFLAG_GENERIC)){
+		if (!CheckCommandAccess(iClient, "pt_vipother", ADMFLAG_GENERIC)){
 			CPrintToChat(iClient, "%t %t", "Tag", "Not_Allowed");
 			return Plugin_Handled;
 		}
@@ -75,7 +75,7 @@ public Action Command_Vip(int iClient, iArgs){
 	}
 	char sName[21];
 	GetClientName(iTarget, sName, sizeof(sName));
-	CPrintToChatAll("%t %t", "Tag", "VICommand", sName, PT_GetPlayTime(iTarget)/60);
+	CPrintToChatAll("%t %t", "Tag", "VIP_Command", sName, PT_GetPlayTime(iTarget)/60);
 	return Plugin_Handled;
 }
 
