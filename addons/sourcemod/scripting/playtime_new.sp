@@ -98,6 +98,7 @@ public Action Event_SwitchTeam(Event event, const char[] name, bool dontBroadcas
 			}
 		}
 	}
+	return Plugin_Continue;
 }
 
 //This is a general event
@@ -168,7 +169,25 @@ public void DB_Connect_Callback(Database db, const char[] error, any data)
 	g_hDatabase.SetCharset("utf8mb4");
 	
 	g_bConnected = true;
-	//TODO Add a check if the serverid exists
+	
+	char sQuery[512];
+	Format(sQuery, sizeof(sQuery), "SELECT id FROM servers WHERE id = %i", g_cServerId.IntValue);
+	g_hDatabase.Query(DB_CheckServerID_Callback, sQuery);
+}
+
+public void DB_CheckServerID_Callback(Database db, DBResultSet results, const char[] error, any data)
+{
+	//Check if there was an error
+	if(strlen(error) > 0 || results == INVALID_HANDLE)
+	{
+		SetFailState("Failed to load serverid from the database: %s", error);
+		return;
+	}
+	
+	results.FetchRow();
+	if(!results.RowCount)
+		SetFailState("The given serverid is invalid");
+	
 	OnDatabaseConnected();
 }
 
@@ -202,7 +221,7 @@ public void DB_LoadPlayerID_Callback(Database db, DBResultSet results, const cha
 	//Check if there was an error
 	if(strlen(error) > 0 || results == INVALID_HANDLE)
 	{
-		LogError("Failed to load the id from %L", client);
+		LogError("Failed to load the id from %L: %s", client, error);
 		g_iPlayerStatus[client] = STATUS_LOAD_FAILED;
 		return;
 	}
@@ -260,7 +279,7 @@ public void DB_AddPlayerToDatabase_Callback(Database db, DBResultSet results, co
 	//Check if there was an error
 	if(strlen(error) > 0 || results == INVALID_HANDLE)
 	{
-		LogError("Failed to add %L to the database", client);
+		LogError("Failed to add %L to the database: %s", client, error);
 		g_iPlayerStatus[client] = STATUS_LOAD_FAILED;
 		return;
 	}
