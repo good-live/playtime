@@ -34,4 +34,14 @@
 		"#format"	""
 		"en"		"{darkred}There aren't enough players. Stopping to track the playtime.{default}"
 	}
+	"Session_Start"
+	{
+		"#format"	""
+		"en"		"{darkred}You're  session has started!"
+	}
+	"PT_AN_ERROR_OCCURED"
+	{
+		"#format"	""
+		"en"		"{darkred}An error occured. Please report this to an Admin!"
+	}
 }

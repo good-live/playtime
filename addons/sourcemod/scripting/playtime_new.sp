@@ -3,6 +3,7 @@
 #include <sourcemod>
 #include <sdktools>
 #include <multicolors>
+#include <playtime2>
 
 #pragma newdecls required
 
@@ -14,13 +15,6 @@ public Plugin myinfo =
 	version = "2.0.0",
 	url = "painlessgaming.eu"
 };
-
-//Defines
-#define STATUS_NOT_LOADED -1
-#define STATUS_LOAD_FAILED -2
-#define STATUS_LOAD_SUCCESSFUL -3
-
-#define SESSION_NOT_STARTED -1
 
 //Global Variables
 
@@ -44,7 +38,7 @@ int g_iPlayerSessionStarted[MAXPLAYERS + 1] =  { SESSION_NOT_STARTED, ... };
 public void OnPluginStart()
 {
 	//Translation
-	LoadTranslations("playtime");
+	LoadTranslations("playtime.phrases");
 	
 	//Config
 	g_cServerId = CreateConVar("pt_serverid", "-1", "The servers database id");
@@ -60,6 +54,12 @@ public void OnPluginStart()
 }
 
 //*************************** EVENTS *************************************/
+public APLRes AskPluginLoad2(Handle myself, bool late, char[] error, int err_max)
+{
+   CreateNative("PT2_GetPlayTime", Native_GetPlayTime);
+   CreateNative("PT2_GetSession", Native_GetSessionTime);
+   return APLRes_Success;
+}
 
 //This one only gets called internal so it doesn't have to be public
 void OnDatabaseConnected()
@@ -153,10 +153,10 @@ void EndSession(int client)
 //*********************** DATABASE STUFF *********************************/
 void DB_Connect()
 {
-	if(!SQL_CheckConfig("playtime"))
+	if(!SQL_CheckConfig("playtime_new"))
 		SetFailState("Couldn't find the database entry 'playtime'!");
 	else
-		Database.Connect(DB_Connect_Callback, "playtime");
+		Database.Connect(DB_Connect_Callback, "playtime_new");
 }
 
 public void DB_Connect_Callback(Database db, const char[] error, any data)
@@ -207,7 +207,7 @@ void DB_LoadPlayerInfo(int client)
 	
 	//Send Query
 	char sQuery[512];
-	Format(sQuery, sizeof(sQuery), "SELECT id, playtime FROM players JOIN playtime ON players.id = playtime.playerid WHERE steamid = '%s'");
+	Format(sQuery, sizeof(sQuery), "SELECT id, playtime FROM players LEFT JOIN playtime ON players.id = playtime.playerid WHERE steamid = '%s'", sSteamID);
 	g_hDatabase.Query(DB_LoadPlayerID_Callback, sQuery, GetClientUserId(client));
 }
 
@@ -252,7 +252,7 @@ void DB_AddPlayerToDatabase(int client)
 	
 	//Get the players name
 	char sName[64];
-	if(!GetClientName(client, sSteamID, sizeof(sSteamID)))
+	if(!GetClientName(client, sName, sizeof(sName)))
 	{
 		g_iPlayerStatus[client] = STATUS_LOAD_FAILED;
 		LogError("Failed to load the name from %L. This session is not tracked", client);
@@ -293,11 +293,12 @@ public void DB_SaveSession(int client)
 {
 	if(g_iPlayerSessionStarted[client] == SESSION_NOT_STARTED)
 		return;
-	
+	if(GetTime() - g_iPlayerSessionStarted[client] <= 0)
+		return;
 	g_iPlayerTime[client] += GetTime() - g_iPlayerSessionStarted[client];
 	
 	char sQuery[512];
-	Format(sQuery, sizeof(sQuery), "INSERT INTO sessions (playerid, serverid, starttime, endtime, length) VALUES (%i, %i, %i, %i, %i)", g_iPlayerID[client], g_cServerId.IntValue, g_iPlayerSessionStarted[client], GetTime(), GetTime() - g_iPlayerSessionStarted[client]);
+	Format(sQuery, sizeof(sQuery), "INSERT INTO sessions (playerid, serverid, starttime, endtime, length, team) VALUES (%i, %i, %i, %i, %i, %i)", g_iPlayerID[client], g_cServerId.IntValue, g_iPlayerSessionStarted[client], GetTime(), GetTime() - g_iPlayerSessionStarted[client], GetClientTeam(client));
 	g_hDatabase.Query(DB_SaveDatabase_Callback, sQuery, GetClientUserId(client));
 }
 
@@ -324,4 +325,33 @@ bool IsClientValid(int client)
 	if(1 <= client <= MaxClients && IsClientConnected(client))
 		return true;
 	return false;
+}
+
+//********************** NATIVES ************************************/
+public int Native_GetSessionTime(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+	if(!IsClientValid(client))
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%i)", client);
+	
+	if(g_iPlayerSessionStarted[client] == SESSION_NOT_STARTED)
+		return 0;
+
+	return GetTime() - g_iPlayerSessionStarted[client];
+}
+
+public int Native_GetPlayTime(Handle plugin, int numParams)
+{
+	int client = GetNativeCell(1);
+	
+	if(!IsClientValid(client))
+		return ThrowNativeError(SP_ERROR_NATIVE, "Invalid client index (%i)", client);
+	
+	if(g_iPlayerStatus[client] != STATUS_LOAD_SUCCESSFUL)
+		return g_iPlayerStatus[client];
+	
+	if(g_iPlayerSessionStarted[client] == SESSION_NOT_STARTED)
+		return g_iPlayerTime[client];
+		
+	return g_iPlayerTime[client] + (GetTime() - g_iPlayerSessionStarted[client]);
 }
