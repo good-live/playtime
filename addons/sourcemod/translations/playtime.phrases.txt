@@ -44,3 +44,4 @@
 		"#format"	""
 		"en"		"{darkred}An error occured. Please report this to an Admin!"
 	}
+}
