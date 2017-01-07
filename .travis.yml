@@ -23,7 +23,7 @@ install:
 before_script:
     - chmod +x addons/sourcemod/scripting/spcomp
     - sed -i "s/<BUILD_ID>/$TRAVIS_BUILD_NUMBER/g" addons/sourcemod/scripting/include/playtime.inc
-script: ./addons/sourcemod/scripting/compile.sh playtime.sp playtime_commands.sp
+script: ./addons/sourcemod/scripting/compile.sh playtime.sp playtime_new.sp playtime_commands.sp playtime_commands_new.sp
 
 # Releases
 after_script:
