@@ -1,0 +1,47 @@
+"Phrases"
+{
+	"Tag"
+	{
+		"ru"  "{green}[PLG-VIP]{default}"
+	}
+	"Time_Added"
+	{
+		"#format"	"{1:i},{2:s}"
+		"ru"		"{darkred}Добавлено{default} {green}{1}{default} {darkred}сек. к времени игры{default} {green}{2}.{default}"
+	}
+	"Session"
+	{
+		"#format"	"{1:s},{2:i},{3:s}"
+		"ru"		" {darkred}{1}{default} играет {green}{2}{3}{default} {darkred}часов подряд.{default}"
+	}
+	"VIP_Command"
+	{
+		"#format"	"{1:s},{2:i}"
+		"ru"		"{darkred}{1}{default} {green}наиграно{default} {darkred}{2}{default} {green}мин. на{default} {green}серверах{default} {darkred}Painlessgaming.eu{default}"
+	}
+	"Not_Allowed"
+	{
+		"#format"	""
+		"ru"		"{darkred}Только администраторы могут проверить время игры другого игрока{default}"
+	}
+	"Enough_Players"
+	{
+		"#format"	""
+		"ru"		"{darkred}У нас достаточно игроков. Начинаю отслеживать время игры.{default}"
+	}
+	"Not_Enough_Players"
+	{
+		"#format"	""
+		"ru"		"{darkred}Не хватает игроков. Остановка отслеживания времени игры.{default}"
+	}
+	"Session_Start"
+	{
+		"#format"	""
+		"ru"		"{darkred}Ваша сессия началась!"
+	}
+	"PT_AN_ERROR_OCCURED"
+	{
+		"#format"	""
+		"ru"		"{darkred}Произошла ошибка. Сообщите об этом администратору!"
+	}
+}
